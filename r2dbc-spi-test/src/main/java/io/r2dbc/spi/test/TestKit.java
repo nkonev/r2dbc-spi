@@ -145,6 +145,22 @@ public interface TestKit<T> {
      */
     JdbcOperations getJdbcOperations();
 
+    @BeforeEach
+    default void createTable() {
+        getJdbcOperations().execute("CREATE TABLE test ( value INTEGER )");
+        getJdbcOperations().execute("CREATE TABLE test_two_column ( col1 INTEGER, col2 VARCHAR(100) )");
+        getJdbcOperations().execute(String.format("CREATE TABLE blob_test ( value %s )", blobType()));
+        getJdbcOperations().execute(String.format("CREATE TABLE clob_test ( value %s )", clobType()));
+    }
+
+    @AfterEach
+    default void dropTable() {
+        getJdbcOperations().execute("DROP TABLE test");
+        getJdbcOperations().execute("DROP TABLE test_two_column");
+        getJdbcOperations().execute("DROP TABLE blob_test");
+        getJdbcOperations().execute("DROP TABLE clob_test");
+    }
+
     @Test
     default void autoCommitByDefault() {
         Mono.from(getConnectionFactory().create())
@@ -421,22 +437,6 @@ public interface TestKit<T> {
             })
             .as(StepVerifier::create)
             .verifyComplete();
-    }
-
-    @BeforeEach
-    default void createTable() {
-        getJdbcOperations().execute("CREATE TABLE test ( value INTEGER )");
-        getJdbcOperations().execute("CREATE TABLE test_two_column ( col1 INTEGER, col2 VARCHAR(100) )");
-        getJdbcOperations().execute(String.format("CREATE TABLE blob_test ( value %s )", blobType()));
-        getJdbcOperations().execute(String.format("CREATE TABLE clob_test ( value %s )", clobType()));
-    }
-
-    @AfterEach
-    default void dropTable() {
-        getJdbcOperations().execute("DROP TABLE test");
-        getJdbcOperations().execute("DROP TABLE test_two_column");
-        getJdbcOperations().execute("DROP TABLE blob_test");
-        getJdbcOperations().execute("DROP TABLE clob_test");
     }
 
     @Test
