@@ -209,6 +209,9 @@ public interface TestKit<T> {
             .verifyComplete();
     }
 
+    /**
+     * Optional rule: Disable if client-side validation is not possible.
+     */
     @Test
     default void bindFails() {
         Mono.from(getConnectionFactory().create())
@@ -475,6 +478,9 @@ public interface TestKit<T> {
             .verifyComplete();
     }
 
+    /**
+     * Optional rule: Disable if client-side validation is not possible.
+     */
     @Test
     default void prepareStatementWithIncompleteBatchFails() {
         Mono.from(getConnectionFactory().create())
@@ -490,6 +496,9 @@ public interface TestKit<T> {
             .verifyComplete();
     }
 
+    /**
+     * Optional rule: Disable if client-side validation is not possible.
+     */
     @Test
     default void prepareStatementWithIncompleteBindingFails() {
         Mono.from(getConnectionFactory().create())
